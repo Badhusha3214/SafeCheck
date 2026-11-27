@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 from statistics import mean, stdev
 from typing import Any
@@ -54,7 +55,11 @@ TESTS = ("reaction", "eyes", "balance", "speech")
 
 
 def load_config() -> dict:
-    return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    # Hosting override: low-RAM servers can pick a smaller whisper model (e.g. "base").
+    if os.environ.get("SAFECHECK_WHISPER_MODEL"):
+        cfg["app"]["whisper_model"] = os.environ["SAFECHECK_WHISPER_MODEL"]
+    return cfg
 
 
 # --------------------------------------------------------------------------- #
