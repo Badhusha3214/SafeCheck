@@ -1,0 +1,31 @@
+{
+  "_comment": "Synthetic sample sessions for Demo mode (illustrative values, not real people). Scored live by backend/scoring.py.",
+  "profiles": {
+    "sober": {
+      "label": "Sober volunteer",
+      "description": "Typical values for a rested, sober adult.",
+      "lang": "en",
+      "metrics": {
+        "reaction": { "mean_ms": 341, "median_ms": 333, "sd_ms": 44, "false_starts": 0, "trials": [318, 333, 296, 402, 356], "quality": 1.0 },
+        "eyes": { "tracking_error": 0.113, "correlation": 0.88, "lag_ms": 230, "saccades_per_s": 0.9, "head_motion": 0.02, "quality": 0.97 },
+        "balance": { "sway_amplitude": 0.034, "sway_velocity": 0.13, "touchdowns": 0, "foot_raised": "right", "foot_lifted": true, "quality": 0.98 },
+        "speech": { "wpm": 138, "pause_count": 2, "pause_total_s": 0.8, "wer": 0.067, "cer": 0.02, "duration_s": 6.5,
+                    "transcript": "Please call Stella and ask her to bring these things with her from the store.",
+                    "expected": "Please call Stella and ask her to bring these things with her from the store.", "quality": 1.0 }
+      }
+    },
+    "impaired": {
+      "label": "Impaired (simulated)",
+      "description": "Slowed, variable reactions; jerky eye pursuit; sway with foot touch-downs; slow, slurred speech.",
+      "lang": "en",
+      "metrics": {
+        "reaction": { "mean_ms": 512, "median_ms": 468, "sd_ms": 118, "false_starts": 2, "trials": [402, 468, 690, 433, 567], "quality": 1.0 },
+        "eyes": { "tracking_error": 0.21, "correlation": 0.64, "lag_ms": 380, "saccades_per_s": 2.4, "head_motion": 0.05, "quality": 0.91 },
+        "balance": { "sway_amplitude": 0.071, "sway_velocity": 0.29, "touchdowns": 3, "foot_raised": "left", "foot_lifted": true, "quality": 0.93 },
+        "speech": { "wpm": 88, "pause_count": 5, "pause_total_s": 3.1, "wer": 0.267, "cer": 0.14, "duration_s": 10.2,
+                    "transcript": "Please call Stella an ask her bring these thing with her from... store.",
+                    "expected": "Please call Stella and ask her to bring these things with her from the store.", "quality": 0.95 }
+      }
+    }
+  }
+}

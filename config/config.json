@@ -1,0 +1,59 @@
+{
+  "_comment": "SafeCheck configuration. 'metrics' holds DEFAULT normal ranges (mean / sd) used until enough baseline volunteers exist. direction: lower_better | higher_better | two_sided.",
+
+  "app": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "whisper_model": "small",
+    "whisper_compute_type": "int8"
+  },
+
+  "sentences": {
+    "en": "Please call Stella and ask her to bring these things with her from the store.",
+    "ml": "ഇന്ന് നല്ല കാലാവസ്ഥയാണ്, ഞാൻ എന്റെ കൂട്ടുകാരനോടൊപ്പം പാർക്കിൽ നടക്കാൻ പോകുന്നു."
+  },
+
+  "baseline": {
+    "_comment": "Once at least min_sessions baseline sessions exist, each metric's normal range = baseline mean +/- 2 SD instead of the defaults below. min_sd_fraction stops a tiny baseline SD from making scoring hypersensitive (SD is floored at this fraction of the default SD).",
+    "min_sessions": 5,
+    "min_sd_fraction": 0.5
+  },
+
+  "scoring": {
+    "_comment": "A metric inside mean +/- 2 SD scores >= 70. Overall >= normal_min -> Normal, >= borderline_min -> Borderline, else Flag. Any single test below flag_test_below forces at least Borderline; two such tests force Flag. Tests whose capture quality is below min_quality are excluded.",
+    "normal_min": 70,
+    "borderline_min": 50,
+    "flag_test_below": 40,
+    "min_quality": 0.6,
+    "min_tests": 2,
+    "test_weights": { "reaction": 1.0, "eyes": 1.0, "balance": 1.0, "speech": 1.0 }
+  },
+
+  "metrics": {
+    "reaction": {
+      "mean_ms":      { "label": "Mean reaction time",   "unit": "ms", "mean": 330, "sd": 55,  "direction": "lower_better", "weight": 1.0 },
+      "median_ms":    { "label": "Median reaction time", "unit": "ms", "mean": 320, "sd": 50,  "direction": "lower_better", "weight": 0.5 },
+      "sd_ms":        { "label": "Variability (SD)",     "unit": "ms", "mean": 45,  "sd": 25,  "direction": "lower_better", "weight": 1.0 },
+      "false_starts": { "label": "False starts",         "unit": "",   "mean": 0,   "sd": 0.6, "direction": "lower_better", "weight": 0.5 }
+    },
+    "eyes": {
+      "tracking_error": { "label": "Gaze error",          "unit": "screen", "mean": 0.10, "sd": 0.05, "direction": "lower_better",  "weight": 1.0 },
+      "correlation":    { "label": "Pursuit correlation", "unit": "",       "mean": 0.85, "sd": 0.10, "direction": "higher_better", "weight": 1.0 },
+      "lag_ms":         { "label": "Eye lag",             "unit": "ms",     "mean": 200,  "sd": 90,   "direction": "lower_better",  "weight": 0.5 },
+      "saccades_per_s": { "label": "Catch-up saccades",   "unit": "/s",     "mean": 0.8,  "sd": 0.5,  "direction": "lower_better",  "weight": 1.0 }
+    },
+    "balance": {
+      "sway_amplitude": { "label": "Sway amplitude",   "unit": "torso",   "mean": 0.030, "sd": 0.015, "direction": "lower_better", "weight": 1.0 },
+      "sway_velocity":  { "label": "Sway velocity",    "unit": "torso/s", "mean": 0.12,  "sd": 0.06,  "direction": "lower_better", "weight": 1.0 },
+      "touchdowns":     { "label": "Foot touch-downs", "unit": "",        "mean": 0,     "sd": 0.75,  "direction": "lower_better", "weight": 1.5 }
+    },
+    "speech": {
+      "wpm":           { "label": "Speaking rate",    "unit": "wpm", "mean": 145, "sd": 30,  "direction": "higher_better", "weight": 1.0,
+                         "by_lang": { "ml": { "mean": 95, "sd": 25 } } },
+      "pause_count":   { "label": "Pauses (>0.3 s)",  "unit": "",    "mean": 1.5, "sd": 1.5, "direction": "lower_better",  "weight": 0.75 },
+      "pause_total_s": { "label": "Total pause time", "unit": "s",   "mean": 0.6, "sd": 0.6, "direction": "lower_better",  "weight": 0.75 },
+      "wer":           { "label": "Word error rate",  "unit": "",    "mean": 0.08, "sd": 0.08, "direction": "lower_better", "weight": 1.0,
+                         "by_lang": { "ml": { "mean": 0.35, "sd": 0.15 } } }
+    }
+  }
+}

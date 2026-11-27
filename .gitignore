@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Large downloaded assets (recreated by `python install.py`)
+models/
+frontend/vendor/
+
+# Local data and logs
+data/
+*.db
+*.log
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

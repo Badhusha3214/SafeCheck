@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeCheck – Impairment Screening</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2322d3ee'/><path d='M10 16l4 4 8-9' stroke='%230a0f1e' stroke-width='3.5' fill='none' stroke-linecap='round'/></svg>" />
+  <script src="/vendor/tailwind.js"></script>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="topbar">
+    <a href="/" class="flex items-center gap-3 shrink-0">
+      <span class="logo-dot">✓</span>
+      <span class="text-2xl font-extrabold tracking-tight">Safe<span class="text-cyan-400">Check</span></span>
+    </a>
+    <ol id="stepper" class="stepper">
+      <li data-step="start">Start</li>
+      <li data-step="reaction">Reaction</li>
+      <li data-step="eyes">Eyes</li>
+      <li data-step="balance">Balance</li>
+      <li data-step="speech">Speech</li>
+      <li data-step="results">Results</li>
+    </ol>
+    <div class="flex items-center gap-3 shrink-0">
+      <span id="mode-badge" class="badge badge-amber hidden">BASELINE MODE</span>
+      <span id="demo-badge" class="badge badge-violet hidden">DEMO</span>
+      <a href="/dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+  </header>
+
+  <main id="app" class="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
+    <!-- START SCREEN -->
+    <section id="screen-start" class="screen">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="eyebrow">Field-sobriety–inspired screening</p>
+          <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mt-2">Four quick checks.<br /><span class="text-cyan-400">Two minutes.</span></h1>
+          <p class="text-xl text-slate-300 mt-5 max-w-lg">Reaction time, eye tracking, balance and speech — using only this laptop's webcam and microphone.</p>
+          <div class="grid grid-cols-2 gap-3 mt-8 max-w-lg">
+            <div class="mini-card"><span>⚡</span>Reaction</div>
+            <div class="mini-card"><span>👁</span>Eye pursuit</div>
+            <div class="mini-card"><span>🧍</span>One-leg stand</div>
+            <div class="mini-card"><span>🗣</span>Speech</div>
+          </div>
+        </div>
+
+        <form id="start-form" class="card p-8 flex flex-col gap-5">
+          <label class="flex flex-col gap-2">
+            <span class="label">Name or ID <span class="text-slate-500 font-normal">(optional)</span></span>
+            <input id="subject" class="input" placeholder="Leave empty to stay anonymous" autocomplete="off" maxlength="60" />
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="label">Speech language</span>
+            <select id="lang" class="input">
+              <option value="en">English</option>
+              <option value="ml">മലയാളം (Malayalam)</option>
+            </select>
+          </label>
+          <label class="flex gap-3 items-start cursor-pointer text-lg">
+            <input id="consent" type="checkbox" class="checkbox mt-1" />
+            <span>I agree to be screened. Camera and microphone are processed <b>on this laptop only</b>; results are stored locally.</span>
+          </label>
+          <details class="text-slate-400">
+            <summary class="cursor-pointer select-none">Admin options</summary>
+            <label class="flex gap-3 items-center mt-3 cursor-pointer">
+              <input id="baseline" type="checkbox" class="checkbox" />
+              <span>Baseline collection mode (sober volunteer – builds the normal range)</span>
+            </label>
+          </details>
+          <button id="start-btn" class="btn btn-primary btn-xl" disabled>Start screening →</button>
+          <button id="demo-btn" type="button" class="btn btn-ghost">▶ Demo mode (replay a sample session)</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TEST SCREEN (re-used by all four tests) -->
+    <section id="screen-test" class="screen hidden">
+      <div class="flex items-baseline justify-between gap-4 mb-6">
+        <div>
+          <p id="test-step" class="eyebrow"></p>
+          <h2 id="test-title" class="text-4xl md:text-5xl font-extrabold"></h2>
+        </div>
+        <button id="skip-btn" class="btn btn-ghost btn-sm">Skip this test</button>
+      </div>
+      <div id="test-body"></div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="screen-results" class="screen hidden"></section>
+  </main>
+
+  <footer class="disclaimer">⚠ Screening only — not a medical or legal test. A result is not proof of impairment.</footer>
+
+  <div id="toasts" class="toasts"></div>
+  <video id="cam" playsinline muted class="hidden"></video>
+
+  <script src="/vendor/chart.umd.min.js"></script>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

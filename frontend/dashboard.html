@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeCheck – Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2322d3ee'/><path d='M10 16l4 4 8-9' stroke='%230a0f1e' stroke-width='3.5' fill='none' stroke-linecap='round'/></svg>" />
+  <script src="/vendor/tailwind.js"></script>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="topbar">
+    <a href="/" class="flex items-center gap-3">
+      <span class="logo-dot">✓</span>
+      <span class="text-2xl font-extrabold tracking-tight">Safe<span class="text-cyan-400">Check</span></span>
+      <span class="badge badge-violet ml-2">ADMIN</span>
+    </a>
+    <div class="flex gap-3">
+      <a href="/?mode=baseline" class="btn btn-ghost btn-sm">+ Baseline session</a>
+      <a href="/" class="btn btn-primary btn-sm">New screening</a>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <div><p class="eyebrow">Admin</p><h1 class="text-4xl font-extrabold">Sessions dashboard</h1></div>
+    </div>
+
+    <section id="tiles" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></section>
+
+    <section class="card p-5">
+      <form id="filters" class="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
+        <label class="flex flex-col gap-1 md:col-span-2"><span class="text-slate-400 text-sm font-semibold">Name / ID</span><input name="q" class="input" placeholder="Search…" /></label>
+        <label class="flex flex-col gap-1"><span class="text-slate-400 text-sm font-semibold">Mode</span>
+          <select name="mode" class="input"><option value="">All</option><option value="screening">Screening</option><option value="baseline">Baseline</option></select></label>
+        <label class="flex flex-col gap-1"><span class="text-slate-400 text-sm font-semibold">Result</span>
+          <select name="result" class="input"><option value="">All</option><option>Normal</option><option>Borderline</option><option>Flag</option><option>Incomplete</option></select></label>
+        <label class="flex flex-col gap-1"><span class="text-slate-400 text-sm font-semibold">From</span><input name="date_from" type="date" class="input" /></label>
+        <label class="flex flex-col gap-1"><span class="text-slate-400 text-sm font-semibold">To</span><input name="date_to" type="date" class="input" /></label>
+        <div class="md:col-span-6 flex gap-3 flex-wrap">
+          <button class="btn btn-primary btn-sm" type="submit">Apply filters</button>
+          <button class="btn btn-ghost btn-sm" type="reset">Clear</button>
+          <a id="csv" class="btn btn-ghost btn-sm ml-auto" href="/api/export.csv">⬇ Export CSV</a>
+        </div>
+      </form>
+    </section>
+
+    <section class="grid lg:grid-cols-3 gap-6">
+      <div class="card p-5"><h3 class="font-bold text-lg mb-3">Results</h3><div class="relative h-64"><canvas id="c-results"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-lg mb-3">Average score per test</h3><div class="relative h-64"><canvas id="c-tests"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-lg mb-3">Overall score by session</h3><div class="relative h-64"><canvas id="c-time"></canvas></div></div>
+    </section>
+
+    <section class="card overflow-hidden">
+      <div class="p-5 flex items-center justify-between"><h3 class="font-bold text-lg">Sessions</h3><span id="count" class="text-slate-400"></span></div>
+      <div class="overflow-auto max-h-[60vh]">
+        <table class="data">
+          <thead><tr><th>#</th><th>Date</th><th>Name / ID</th><th>Mode</th><th>Lang</th><th>Overall</th><th>Result</th>
+            <th>Reaction</th><th>Eyes</th><th>Balance</th><th>Speech</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div><h3 class="font-bold text-lg">Normal ranges (scoring reference)</h3>
+          <p id="baseline-status" class="text-slate-400"></p></div>
+        <label class="flex items-center gap-2 text-slate-400">Speech language
+          <select id="norm-lang" class="input !py-2 !w-auto"><option value="en">English</option><option value="ml">Malayalam</option></select></label>
+      </div>
+      <div class="overflow-auto"><table class="data"><thead><tr><th>Test</th><th>Metric</th><th>Mean</th><th>SD</th><th>Normal range (±2 SD)</th><th>Source</th><th>n</th></tr></thead><tbody id="norms"></tbody></table></div>
+    </section>
+  </main>
+
+  <div id="detail" class="hidden fixed inset-0 bg-black/70 z-50 grid place-items-center p-6"></div>
+  <div id="toasts" class="toasts"></div>
+  <footer class="disclaimer">⚠ Screening only — not a medical or legal test.</footer>
+
+  <script src="/vendor/chart.umd.min.js"></script>
+  <script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>
