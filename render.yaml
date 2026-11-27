@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: safecheck
+    runtime: docker
+    plan: starter          # whisper-small needs more than the free tier's 512 MB RAM
+    healthCheckPath: /api/config
